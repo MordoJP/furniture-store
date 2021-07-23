@@ -6,6 +6,7 @@ class CardsContainer extends WebComponent {
           .container {
             display: flex;
             flex-wrap: wrap;
+            justify-content: space-between;
           }
 		</style>
 	`}
@@ -24,8 +25,10 @@ class CardsContainer extends WebComponent {
     }
 
     async connectedCallback() {
-        this.getProducts().then(() => {
-            this.renderCards()
+        this.getCategory().then(() => {
+            this.getProducts().then(() => {
+                this.renderCards()
+            })
         })
 
         this.addListeners()
@@ -36,6 +39,18 @@ class CardsContainer extends WebComponent {
         window.shop = {products : this.products}
     }
 
+    async getCategory() {
+        this.categories = await this.fetch('get','categories/')
+    }
+
+    findCategoryName(product) {
+        this.categories.forEach(names => {
+            if (names.id === product.category) {
+                product.categoryName = names.name
+            }
+        })
+    }
+
     renderCards() {
         if (this.products.length) {
             const cards = this.products.map(card => {
@@ -44,10 +59,15 @@ class CardsContainer extends WebComponent {
                 productCard.img = card.img
                 productCard.title = card.title
                 productCard.price = card.price
+                productCard.category = card.category
+                productCard.discount = card.discount
+                this.findCategoryName(productCard)
                 return productCard
             })
             this.shadowRoot.querySelector('.container').append(...cards)
         }
+
+
     }
 
     addListeners() {
