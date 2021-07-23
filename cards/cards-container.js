@@ -6,7 +6,12 @@ class CardsContainer extends WebComponent {
           .container {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
+            justify-content: space-around;
+            /*flex-basis: 100%;*/
+          }
+          
+          .amount {
+            color: azure;
           }
 		</style>
 	`}
@@ -25,30 +30,33 @@ class CardsContainer extends WebComponent {
     }
 
     async connectedCallback() {
-        this.getCategory().then(() => {
-            this.getProducts().then(() => {
-                this.renderCards()
-            })
+        this.createProductList().then(() => {
+            this.renderCards()
         })
-
         this.addListeners()
+    }
+
+    async createProductList() {
+        await this.getProducts()
+        await this.getCategory()
+        this.products.forEach(prod => {
+            prod.categoryName = this.getCategoryName(prod.category)
+        })
+        window.shop = {products : this.products} //Что это значит??
     }
 
     async getProducts() {
         this.products = await this.fetch('get','products/')
-        window.shop = {products : this.products}
     }
 
     async getCategory() {
         this.categories = await this.fetch('get','categories/')
     }
 
-    findCategoryName(product) {
-        this.categories.forEach(names => {
-            if (names.id === product.category) {
-                product.categoryName = names.name
-            }
-        })
+    getCategoryName(categoryId) {
+        //что означает запись name в фигурных скобках?
+        const { name } = this.categories.find(names => names.id === categoryId)
+        return name
     }
 
     renderCards() {
@@ -61,7 +69,7 @@ class CardsContainer extends WebComponent {
                 productCard.price = card.price
                 productCard.category = card.category
                 productCard.discount = card.discount
-                this.findCategoryName(productCard)
+                productCard.categoryName = card.categoryName
                 return productCard
             })
             this.shadowRoot.querySelector('.container').append(...cards)
@@ -79,7 +87,12 @@ class CardsContainer extends WebComponent {
 
     calculateAmount(product) {
         const price = product.price
-        this.amount += price
+        if (product.discount) {
+            const priceDiscount = (product.price * (100 - product.discount)/100)
+            this.amount += priceDiscount
+        } else {
+            this.amount += price
+        }
         this.renderAmount()
     }
 

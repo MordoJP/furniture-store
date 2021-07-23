@@ -1,3 +1,5 @@
+@import "circe.css";
+
 body {
     margin: 0;
     background-color: black;
@@ -5,5 +7,5 @@ body {
 
 my-app {
     margin: 0 auto;
-    width: 1280px;
+    width: 90%;
 }

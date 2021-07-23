@@ -1,65 +1,94 @@
 class ProductCard extends WebComponent {
     get css() { return `
 		<style>
-		    @import "../style/circe.css";
 		    
 			:host {
 			
 			}
 			
 			.card {
-			    height: 450px;
-			    width: 300px;
-			    margin: 60px 20px 0;
+			    height: 400px;
+			    width: 350px;
+			    margin: 60px 0;
 			    display: flex;
 			    flex-direction: column;
 			    justify-content: space-between;
 			    align-items: center;
 			    background-color: black;
-			    border: 1px solid azure;
+			    cursor: pointer;
 			}
 			
-			.sale, .title-box, .img, .price-box, .button {
-			    margin: 5px 0;
+			.category, .button:hover, .old-price {
+			    opacity: .7;
 			}
 			
-			.sale {
+			.category, .title, .price, .old-price, .button {
 			    color: azure;
-			    width: 120px;
+			}
+			
+			.sale, .sale-mouse-enter {
+			    width: 30px;
 			    height: 30px;
 			    opacity: .0;
 			    display: flex;
 			    justify-content: center;
 			    align-items: center;
+			    overflow: hidden;
 			    background-color: #161b2b;
-			    border-radius: 5px 5px 5px 5px;
+			    border-radius: 15px 15px 15px 15px;
+			    transition: all 0.2s ease-out;
+			}
+			
+			.sale {
+			    width: 30px;
+			}
+			
+			.sale-mouse-enter {
+			    width: 120px;
+			}
+			
+			.sale-text {
+			    color: #161b2b;
+			    font: 3px "Circe Light";
+			    transition: all 0.2s ease-out;
+			    opacity: 0;
+			}
+			
+			.sale-text-mouse-enter {
+			    opacity: 1;
+			    color: azure;
+			    font: 15px "Circe Light";
 			}
 	
 			.title-box {
-			    width: 80%;
-			    height: 30px;
+			    width: 70%;
 			    display: flex;
 			    flex-direction: column;
 			}
 			
 			.category {
-			    font: 15px Tahoma;
-			    color: azure;
+			    font: 15px "Circe ExtraLight";
 			}
 			
 			.title {
-			    font: 30px Tahoma;
-			    font-weight: bold;
-			    color: azure;
-			    margin: 5px 0;
+			    font: 35px "Circe Bold";
+			    margin: 0;
+			}
+			
+			.img, .img-mouse-enter {
+			    height: 180px;
+			    background-position: center;
+			    background-repeat: no-repeat;
+			    background-size: contain;
+			    transition: all 0.2s ease-out;
 			}
 			
 			.img {
 			    width: 95%;
-			    height: 200px;
-			    background-position: center;
-			    background-repeat: no-repeat;
-			    background-size: contain;
+			}
+			
+			.img-mouse-enter {
+			    transform: scale(1.1);
 			}
 			
 			.price-box {
@@ -71,77 +100,58 @@ class ProductCard extends WebComponent {
 			}
 			
 			.price {
-			    font: 20px Tahoma;
-			    color: #f0ffff;
+			    font: 20px Circe;
 			}
 			
 			.old-price {
-			    font: 12px Tahoma;
-			    color: #f0ffff;
+			    font: 12px "Circe Light";
 			    text-decoration: line-through;
-			    opacity: .8;
 			}
 			
 			.button {
-			    border: 0;
 			    width: 200px;
 			    height: 50px;
-			    background-color: azure;
-			    color: #161b2b;
-			    font: 15px Tahoma;
+			    margin-top: 8px;
+			    background-color: black;
+			    font: 15px "Circe Light";
+			    border: 1px solid azure;
 			    border-radius: 25px 25px 25px 25px;
 			    cursor: pointer;
+			    transition: all 0.2s ease-out;
 			}
 			
-			.button:hover {
-			    opacity: .8;
-			    transition: 0.2s;
-			}
-			
-			@media screen and (max-width: 1024px) {
+			@media screen and (max-width: 1135px) {
 			    .card {
-			        height: 350px;
-			        width: 250px;
-			        margin: 20px;
-			    }
-			    
-			    .img {
-			        width: 250px;
-			        height: 200px;
-			    }
-			}
-			
-			@media screen and (max-width: 640px) {
-			    .card {
-			        height: 250px;
-			        width: 150px;
+			        height: 400px;
+			        width: 300px;
 			        margin: 10px;
 			    }
 			    
 			    .img {
-			        width: 150px;
-			        height: 100px;
+			        height: 200px;
 			    }
 			}
 			
-			@media screen and (max-width: 320px) {
+			@media screen and (max-width: 767px) {
 			    .card {
-			        height: 150px;
-			        width: 100px;
-			        margin: 5px;
+			        height: 250px;
+			        width: 150px;
+			        margin: 40px 0;
 			    }
 			    
 			    .img {
-			        width: 100px;
-			        height: 50px;
+			        height: 100px;
 			    }
 			}
+		
 		</style>
 	`}
 
     get html() { return `
         <div class="card">
-            <div class="sale"></div>
+            <div class="sale">
+                <div class="sale-text"></div>
+            </div>
             <div class="title-box">
                 <span class="category"></span>
                 <h3 class="title"></h3>
@@ -161,11 +171,13 @@ class ProductCard extends WebComponent {
     }
 
     async connectedCallback() {
+        const card = this.shadowRoot.querySelector('.card')
         const title = this.shadowRoot.querySelector('.title')
         const img = this.shadowRoot.querySelector('.img')
         const price = this.shadowRoot.querySelector('.price')
         const button = this.shadowRoot.querySelector('.button')
         const sale = this.shadowRoot.querySelector('.sale')
+        const saleText = this.shadowRoot.querySelector('.sale-text')
         const category = this.shadowRoot.querySelector('.category')
         const oldPrice = this.shadowRoot.querySelector('.old-price')
 
@@ -174,20 +186,35 @@ class ProductCard extends WebComponent {
             title.innerText = `${this.title}`
         img.style.backgroundImage = `url('img/products/${this.img}')`
         price.innerText = `${this.price} руб.`
-        if (this.discount) {
-            sale.innerText = `Скидка ${this.discount} %`
-            sale.style.opacity = 0.8;
-            oldPrice.innerText = `${this.price.toFixed(2)} руб.`
-            price.innerText = `${(this.price * (100 - this.discount)/100).toFixed(2)} руб.`
-        } else {
-            price.innerText = `${this.price.toFixed(2)} руб.`
-        }
+        this.discountAjuster(this.discount, saleText, sale, oldPrice, price, this.price)
+
         button.addEventListener('click', () => {
             this.emit('add_product_to_cart', this.id)
         })
+        card.addEventListener('mouseenter', () => {
+            this.aiming(sale, saleText, img)
+        })
+        card.addEventListener('mouseleave', () => {
+            this.aiming(sale, saleText, img)
+        })
     }
 
+    discountAjuster(disc, salerTxt, saler, old, newPr, pricer) {
+        if (disc) {
+            salerTxt.innerText = `Скидка ${disc} %`
+            saler.style.opacity = 0.8;
+            old.innerText = `${pricer.toFixed(2)} руб.`
+            newPr.innerText = `${(pricer * (100 - disc)/100).toFixed(2)} руб.`
+        } else {
+            newPr.innerText = `${pricer.toFixed(2)} руб.`
+        }
+    }
 
+    aiming(sal, salTxt, image) {
+        sal.classList.toggle('sale-mouse-enter')
+        salTxt.classList.toggle('sale-text-mouse-enter')
+        image.classList.toggle('img-mouse-enter')
+    }
 }
 
 customElements.define('product-card', ProductCard)
