@@ -124,23 +124,115 @@ class ProductCard extends WebComponent {
 			    .card {
 			        height: 400px;
 			        width: 300px;
-			        margin: 10px;
+			        margin: 50px 0;
 			    }
 			    
-			    .img {
-			        height: 200px;
+			    .sale, .sale-mouse-enter {
+			    width: 25px;
+			    height: 25px;
+			    border-radius: 12px 12px 12px 12px;
+			    }
+			
+			    .sale {
+			        width: 25px;
+			    }
+			
+			    .sale-mouse-enter {
+			        width: 100px;
+			    }
+			
+			    .sale-text {
+			        font: 3px "Circe Light";
+			    }
+			
+			    .sale-text-mouse-enter {
+			        font: 12px "Circe Light";
+			    }
+			    
+			    .img, .img-mouse-enter {
+			        height: 170px;
+			    }
+			    
+			    .price-box {
+			        height: 35px;
+			    }
+			
+			    .price {
+			        font: 18px Circe;
+			    }
+			
+			    .old-price {
+			        font: 12px "Circe Light";
+			    }
+			
+			    .button {
+			        width: 150px;
+			        height: 40px;
+			        margin-top: 8px;
+			        font: 15px "Circe Light";
+			        border-radius: 20px 20px 20px 20px;
 			    }
 			}
 			
 			@media screen and (max-width: 767px) {
 			    .card {
-			        height: 250px;
-			        width: 150px;
+			        height: 300px;
+			        width: 200px;
 			        margin: 40px 0;
 			    }
 			    
-			    .img {
-			        height: 100px;
+			    .category {
+			        font: 12px "Circe ExtraLight";
+			    }
+			    
+			    .title {
+			        font: 23px "Circe Bold";
+			    }
+			
+			    .sale, .sale-mouse-enter {
+			    width: 20px;
+			    height: 20px;
+			    border-radius: 10px 10px 10px 10px;
+			    }
+			
+			    .sale {
+			        width: 20px;
+			    }
+			
+			    .sale-mouse-enter {
+			        width: 80px;
+			    }
+			
+			    .sale-text {
+			        font: 3px "Circe Light";
+			    }
+			
+			    .sale-text-mouse-enter {
+			        font: 12px "Circe Light";
+			    }
+			    
+			    .img, .img-mouse-enter {
+			        height: 150px;
+			    }
+			    
+			    .price-box {
+			        height: 30px;
+			    }
+			
+			    .price {
+			        font: 15px Circe;
+			    }
+			
+			    .old-price {
+			        font: 10px "Circe Light";
+			    }
+			
+			    .button {
+			        width: 150px;
+			        height: 40px;
+			        margin-top: 8px;
+			        font: 15px "Circe Light";
+			        border-radius: 20px 20px 20px 20px;
 			    }
 			}
 		
@@ -200,13 +292,18 @@ class ProductCard extends WebComponent {
     }
 
     discountAjuster(disc, salerTxt, saler, old, newPr, pricer) {
+        let actualPrice;
         if (disc) {
             salerTxt.innerText = `Скидка ${disc} %`
-            saler.style.opacity = 0.8;
-            old.innerText = `${pricer.toFixed(2)} руб.`
-            newPr.innerText = `${(pricer * (100 - disc)/100).toFixed(2)} руб.`
+            saler.style.opacity = 0.8
+            //как сократить?
+            let priceWithSpaces = pricer.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            old.innerText = `${priceWithSpaces} руб.`
+            actualPrice = (pricer * (100 - disc)/100).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            newPr.innerText = `${actualPrice} руб.`
         } else {
-            newPr.innerText = `${pricer.toFixed(2)} руб.`
+            let actualPrice = pricer.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            newPr.innerText = `${actualPrice} руб.`
         }
     }
 

@@ -7,7 +7,9 @@ class CardsContainer extends WebComponent {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-around;
-            /*flex-basis: 100%;*/
+            margin: 0 auto;
+            width: 90%;
+            max-width: 1440px;
           }
           
           .amount {
