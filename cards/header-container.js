@@ -47,23 +47,34 @@ class HeaderContainer extends WebComponent {
 		        opacity: 1;
 		    }
 		    
-		    .button__top-line, .button__bottom-line {
+		    .button__top-line-open, .button__bottom-line-open, .button__top-line-closed, .button__bottom-line-closed {
 		        height: 2px;
 		        width: 40px;
 		        background-color: azure;
 		        border-radius: 1px 1px 1px 1px;
 		        position: relative;
+                transition: all 0.3s ease-out;
 		    }
 		    
-		    .button__top-line {
+		    .button__top-line-open {
 		        transform: rotate(45deg);
 		        top: 16px;
 		        left: -3px;
 		    }
 		    
-		    .button__bottom-line {
+		    .button__bottom-line-open {
 		        transform: rotate(-45deg);
 		        top: 14px;
+		        left: -3px;
+		    }
+		    
+		    .button__top-line-closed {
+		        top: 12px;
+		        left: -3px;
+		    }
+		    
+		    .button__bottom-line-closed {
+		        top: 16px;
 		        left: -3px;
 		    }
 		    
@@ -71,7 +82,7 @@ class HeaderContainer extends WebComponent {
                 color: azure;
                 margin: 0;
                 text-align: center;
-                font: 40px "Circe Bold";
+                font: 60px "Circe Bold";
             }
             
             .basket-search-container, .basket-container, .search-container {
@@ -87,7 +98,35 @@ class HeaderContainer extends WebComponent {
                 width: 30px;
                 height: 30px;
                 color: azure;
-                background-image: url('/img/icons/basket-icon.png');
+                background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMTUwLjAwMDAwMHB0IiBoZWlnaHQ9IjE1MC4wMDAwMDBwdCIgdmlld0JveD0iMCAwIDE1MC4wMDAwMDAgMTUwLjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgo8bWV0YWRhdGE+CkNyZWF0ZWQgYnkgcG90cmFjZSAxLjE2LCB3cml0dGVuIGJ5IFBldGVyIFNlbGluZ2VyIDIwMDEtMjAxOQo8L21ldGFkYXRhPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwxNTAuMDAwMDAwKSBzY2FsZSgwLjEwMDAwMCwtMC4xMDAwMDApIgpmaWxsPSIjMDAwMDAwIiBzdHJva2U9Im5vbmUiPgo8L2c+Cjwvc3ZnPgo=");
+            }
+            
+            .header__categories-open {
+                border-top: 1px solid azure;
+                border-bottom: 1px solid azure;
+                transition: all 0.3s ease-out;
+                display: block;
+            }
+            
+            .header__categories-closed {
+                display: none;
+                transition: all 0.3s ease-out;
+            }
+            
+            .categories-container {
+                list-style-type: none;
+                margin: 0; 
+                padding-left: 0;
+                display: flex;
+                justify-content: space-around;
+                flex-wrap: wrap;
+            }
+            
+            .categories-button {
+                color: azure;
+                font: 20px Circe;
+                cursor: pointer;
+                margin: 10px 35px;
             }
             
 		</style>
@@ -98,11 +137,11 @@ class HeaderContainer extends WebComponent {
             <div class="header__content">    
                 <div class="category-button-container">
                     <div class="category-button">
-                        <div class="button__top-line"></div>
-                        <div class="button__bottom-line"></div>
+                        <div class="button__top-line-closed" id="top-line"></div>
+                        <div class="button__bottom-line-closed" id="bottom-line"></div>
                     </div>
                 </div>
-                <h1 class="logo"></h1>
+                <h1 class="logo">cose rubate</h1>
                 <div class="basket-search-container">
                     <div class="basket-container">
                         <span class="basket-counter"></span>
@@ -115,10 +154,19 @@ class HeaderContainer extends WebComponent {
                         </div>
                     </form>
                 </div>
-                
             </div>
-            <div class="header__categories">
-                <div class="tst-div"></div>
+            <div class="header__categories-closed" id="header__categories">
+                <ul class="categories-container">
+                <li class="categories-button cat-all">Все</li>
+                <li class="categories-button cat-sale">Со скидкой</li>
+                <li class="categories-button cat-sofa">Диваны</li>
+                <li class="categories-button cat-armchair">Кресла</li>
+                <li class="categories-button cat-bed">Кровати</li>
+                <li class="categories-button cat-chair">Стулья</li>
+                <li class="categories-button cat-table">Столы</li>
+                <li class="categories-button cat-lighter">Светильники</li>
+                <li class="categories-button cat-style">Декоративные украшения</li>
+                </ul>
             </div>
         </header>
 	`}
@@ -129,11 +177,35 @@ class HeaderContainer extends WebComponent {
     }
 
     async connectedCallback() {
-        // const basketIcon = this.shadowRoot.querySelector('.basket-icon')
-        const logo = this.shadowRoot.querySelector('.logo')
+        const categoryButton = this.shadowRoot.querySelector('.category-button')
+        const categoryes = this.shadowRoot.querySelector('#header__categories')
+        const topLine = this.shadowRoot.querySelector('#top-line')
+        const bottomLine = this.shadowRoot.querySelector('#bottom-line')
 
+        categoryButton.addEventListener('click', () => {
+            this.categoriesOpen(topLine, bottomLine, categoryes)
+        })
+
+        // const basketIcon = this.shadowRoot.querySelector('.basket-icon')
         // basketIcon.style.backgroundImage = 'url(img/icons/basket-icon.png);'
-        logo.innerText = 'COSE RUBATE'
+    }
+
+    categoriesOpen (top, bottom, hide) {
+        if (top.className === 'button__top-line-open') {
+            top.classList.remove('button__top-line-open')
+            top.classList.add('button__top-line-closed')
+            bottom.classList.remove('button__bottom-line-open')
+            bottom.classList.add('button__bottom-line-closed')
+            hide.classList.remove('header__categories-open')
+            hide.classList.add('header__categories-closed')
+        } else {
+            top.classList.remove('button__top-line-closed')
+            top.classList.add('button__top-line-open')
+            bottom.classList.remove('button__bottom-line-closed')
+            bottom.classList.add('button__bottom-line-open')
+            hide.classList.remove('header__categories-closed')
+            hide.classList.add('header__categories-open')
+        }
     }
 
 
