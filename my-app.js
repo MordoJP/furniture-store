@@ -1,3 +1,4 @@
+import('./cards/header-container.js')
 import('./cards/cards-container.js')
 import('./shop-cart.js')
 
@@ -7,19 +8,11 @@ class MyApp extends WebComponent {
 			:host {
               
 			}
-		    
-		    .store-name {
-		        margin: 0;
-		        color: azure;
-		        font: 60px Tahoma;
-			    font-weight: bold;
-		    }
-			
 		</style>
 	`}
 
     get html() { return `
-        <h1 class="store-name">Cose rubate</h1>
+        <header-container></header-container>
         <cards-container></cards-container>
 	`}
 

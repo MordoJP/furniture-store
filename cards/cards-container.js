@@ -76,11 +76,10 @@ class CardsContainer extends WebComponent {
             })
             this.shadowRoot.querySelector('.container').append(...cards)
         }
-
-
     }
 
     addListeners() {
+        //и тут что значит в фигурных скобках?
         this.addEventListener('add_product_to_cart', ({detail}) => {
             const idx = window.shop.products.findIndex(el => el.id === +detail)
             this.calculateAmount(window.shop.products[idx])

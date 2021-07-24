@@ -34,7 +34,7 @@ class ProductCard extends WebComponent {
 			    justify-content: center;
 			    align-items: center;
 			    overflow: hidden;
-			    background-color: #161b2b;
+			    background-color: #242424;
 			    border-radius: 15px 15px 15px 15px;
 			    transition: all 0.2s ease-out;
 			}
@@ -48,7 +48,7 @@ class ProductCard extends WebComponent {
 			}
 			
 			.sale-text {
-			    color: #161b2b;
+			    color: #242424;
 			    font: 3px "Circe Light";
 			    transition: all 0.2s ease-out;
 			    opacity: 0;
