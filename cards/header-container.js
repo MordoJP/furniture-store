@@ -310,9 +310,6 @@ class HeaderContainer extends WebComponent {
         categoryButton.addEventListener('click', () => {
             this.categoriesOpen(topLine, bottomLine, categoryes, mover)
         })
-
-        // const basketIcon = this.shadowRoot.querySelector('.basket-icon')
-        // basketIcon.style.backgroundImage = 'url(img/icons/basket-icon.png);'
     }
 
     categoriesOpen (top, bottom, hide, move) {
