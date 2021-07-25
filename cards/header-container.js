@@ -14,8 +14,20 @@ class HeaderContainer extends WebComponent {
 		        max-width: 1440px;
 		    }
 		    
+		    .mover {
+		        width: 100%;
+		        height: 128px;
+		        background-color: black;
+		        transition: ease-out 0.3s;
+		    }
+		    
 		    .header__content {
-		        padding: 20px 10px;
+		        width: 100%;
+		        padding: 20px 40px;
+		        position: fixed;
+		        margin-bottom: 100px;
+		        z-index: 5;
+		        background-color: black;
 		    }
 		    
 		    .category-button-container, .logo, .basket-search-container {
@@ -28,8 +40,66 @@ class HeaderContainer extends WebComponent {
 		        align-items: center;
 		    }
 		    
+		    /*.basket-search-container {*/
+		    /*    */
+		    /*}*/
+		    
+		    .basket-icon-img, .search-icon-img{
+                height: 30px;
+                width: 30px;
+                cursor: pointer;
+                opacity: 0.8;
+		        transition: all 0.2s ease-out;
+            }
+            
+            
+            .search-container-form {
+                position: absolute;
+                height: 30px;
+                width: 30px;
+            }
+            
+            .search-container-form:hover> .search-bar{
+                background: #242424;
+                height: 45px;
+                border-radius: 45px;
+                width: 300px;
+                padding: 10px 25px;
+                z-index: 1;
+            }
+            
+            .search-button {
+                position: absolute;
+                top: 0;
+                right: 0;
+                background: none;
+                border: 0;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                z-index: 1;
+            }
+            
+            .search-bar {
+                height: 40px;
+                width: 0;
+                padding: 3px 20px;
+                outline: none;
+                transition: 0.4s cubic-bezier(0, 0.8, 0, 1);
+                position: absolute;
+                top: -7px;
+                right: -11px;
+                border: none;
+                background: none;
+                color: azure;
+                font: 16px Circe;
+            }
+		    
 		    .category-button-container {
-		        height: 40px;
+		        height: 30px;
 		        display: flex;
 		        align-items: center;
 		    }
@@ -43,7 +113,7 @@ class HeaderContainer extends WebComponent {
 		        transition: all 0.2s ease-out;
 		    }
 		    
-		    .category-button:hover {
+		    .category-button:hover, .basket-icon-img:hover, .search-icon-img:hover {
 		        opacity: 1;
 		    }
 		    
@@ -90,27 +160,23 @@ class HeaderContainer extends WebComponent {
                 align-items: center;
             }
             
-            .basket-search-container {
-                justify-content: space-between;
+            .basket-container, .search-container {
+                width: 30px;
+                margin: 0 20px;
             }
             
-            .basket-icon {
-                width: 30px;
-                height: 30px;
-                color: azure;
-                background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMTUwLjAwMDAwMHB0IiBoZWlnaHQ9IjE1MC4wMDAwMDBwdCIgdmlld0JveD0iMCAwIDE1MC4wMDAwMDAgMTUwLjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgo8bWV0YWRhdGE+CkNyZWF0ZWQgYnkgcG90cmFjZSAxLjE2LCB3cml0dGVuIGJ5IFBldGVyIFNlbGluZ2VyIDIwMDEtMjAxOQo8L21ldGFkYXRhPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwxNTAuMDAwMDAwKSBzY2FsZSgwLjEwMDAwMCwtMC4xMDAwMDApIgpmaWxsPSIjMDAwMDAwIiBzdHJva2U9Im5vbmUiPgo8L2c+Cjwvc3ZnPgo=");
+            .basket-search-container {
+                justify-content: flex-end;
             }
             
             .header__categories-open {
                 border-top: 1px solid azure;
                 border-bottom: 1px solid azure;
                 transition: all 0.3s ease-out;
-                display: block;
-            }
-            
-            .header__categories-closed {
-                display: none;
-                transition: all 0.3s ease-out;
+                box-sizing: border-box;
+                position: fixed;
+                background-color: black;
+                z-index: 4;
             }
             
             .categories-container {
@@ -127,8 +193,59 @@ class HeaderContainer extends WebComponent {
                 font: 20px Circe;
                 cursor: pointer;
                 margin: 10px 35px;
+                opacity: .8;
             }
             
+            .categories-button:hover {
+                opacity: 1;
+            }
+            
+            @media screen and (max-width: 1135px) {
+                .logo {
+                    font: 45px "Circe Bold";
+                }
+                
+                .category-button-container, .basket-search-container {
+		            width: 200px;
+		        }
+            }
+            
+            @media screen and (max-width: 767px) {
+                .logo {
+                    font: 30px "Circe Bold";
+                }
+                
+                .header__content {
+                    width: 100%;
+                    padding: 10px 20px;
+                    margin-bottom: 100px;
+                }
+                
+                .basket-icon-img, .search-icon-img {
+                    height: 20px;
+                    width: 20px;
+                }
+                
+                .category-button-container, .basket-search-container {
+		            width: 80px;
+		        }
+		        
+		        .basket-container, .search-container  {
+		            margin: 0 5px;
+		        }
+		        
+		        .header__categories-open {
+		            top: -183px;
+		        }
+		        
+		        .mover {
+		            height: 65px;
+		        }
+		        
+		        .search-container-form:hover> .search-bar{
+                    width: 250px;
+                }
+            }
 		</style>
 	`}
 
@@ -144,18 +261,25 @@ class HeaderContainer extends WebComponent {
                 <h1 class="logo">cose rubate</h1>
                 <div class="basket-search-container">
                     <div class="basket-container">
-                        <span class="basket-counter"></span>
-                        <div class="basket-icon"></div>
+                        <div class="basket-counter"></div>
+                        <div class="basket-icon">
+                        <img src="img/icons/basket-icon-n.png" alt="" class="basket-icon-img">
+                        </div>
                     </div>
-                    <form class="search-container">
+                    <div class="search-container">
+                    <form class="search-container-form">
                         <input type="text" class="search-bar" placeholder="Поиск...">
                         <div class="search-icon">
-                        <button class="search-button"></button>
+                        <button class="search-button">
+                            <img src="img/icons/search-icon-n.png" alt="" class="search-icon-img">
+                        </button>
                         </div>
                     </form>
+                    </div>
                 </div>
             </div>
-            <div class="header__categories-closed" id="header__categories">
+            <div class="mover"></div>
+            <div class="header__categories-open" id="header__categories">
                 <ul class="categories-container">
                 <li class="categories-button cat-all">Все</li>
                 <li class="categories-button cat-sale">Со скидкой</li>
@@ -181,30 +305,59 @@ class HeaderContainer extends WebComponent {
         const categoryes = this.shadowRoot.querySelector('#header__categories')
         const topLine = this.shadowRoot.querySelector('#top-line')
         const bottomLine = this.shadowRoot.querySelector('#bottom-line')
+        const mover = this.shadowRoot.querySelector('.mover')
 
         categoryButton.addEventListener('click', () => {
-            this.categoriesOpen(topLine, bottomLine, categoryes)
+            this.categoriesOpen(topLine, bottomLine, categoryes, mover)
         })
 
         // const basketIcon = this.shadowRoot.querySelector('.basket-icon')
         // basketIcon.style.backgroundImage = 'url(img/icons/basket-icon.png);'
     }
 
-    categoriesOpen (top, bottom, hide) {
+    categoriesOpen (top, bottom, hide, move) {
+        let headerSize, heightOpen, marginOpen
+        if (window.matchMedia("(min-width: 1136px)").matches) {
+            headerSize = 128
+            marginOpen = 128
+            heightOpen = 226
+        } else if (window.matchMedia("(min-width: 768px)").matches) {
+            headerSize = 106
+            marginOpen = 106
+            heightOpen = 226
+        } else if (window.matchMedia("(min-width: 743px)").matches) {
+            headerSize = 65
+            marginOpen = 248
+            heightOpen = 163
+        } else if (window.matchMedia("(min-width: 533px)").matches) {
+            headerSize = 65
+            marginOpen = 248
+            heightOpen = 212
+        } else if (window.matchMedia("(min-width: 414px)").matches) {
+            headerSize = 65
+            marginOpen = 248
+            heightOpen = 261
+        } else if (window.matchMedia("(min-width: 320px)").matches) {
+            headerSize = 65
+            marginOpen = 248
+            heightOpen = 290
+        }
+
+
         if (top.className === 'button__top-line-open') {
             top.classList.remove('button__top-line-open')
             top.classList.add('button__top-line-closed')
             bottom.classList.remove('button__bottom-line-open')
             bottom.classList.add('button__bottom-line-closed')
-            hide.classList.remove('header__categories-open')
-            hide.classList.add('header__categories-closed')
+            hide.style.margin = '0 0 0'
+            move.style.height = `${headerSize}px`
         } else {
             top.classList.remove('button__top-line-closed')
             top.classList.add('button__top-line-open')
             bottom.classList.remove('button__bottom-line-closed')
             bottom.classList.add('button__bottom-line-open')
-            hide.classList.remove('header__categories-closed')
-            hide.classList.add('header__categories-open')
+            hide.style.margin = `${marginOpen}px 0 0`
+            move.style.height = `${heightOpen}px`
         }
     }
 
