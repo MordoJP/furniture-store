@@ -302,44 +302,26 @@ class HeaderContainer extends WebComponent {
 
     async connectedCallback() {
         const categoryButton = this.shadowRoot.querySelector('.category-button')
-        const categoryes = this.shadowRoot.querySelector('#header__categories')
+        const headerContent = this.shadowRoot.querySelector('.header__content')
+        const categories = this.shadowRoot.querySelector('#header__categories')
         const topLine = this.shadowRoot.querySelector('#top-line')
         const bottomLine = this.shadowRoot.querySelector('#bottom-line')
         const mover = this.shadowRoot.querySelector('.mover')
 
         categoryButton.addEventListener('click', () => {
-            this.categoriesOpen(topLine, bottomLine, categoryes, mover)
+            this.categoriesOpen(topLine, bottomLine, categories, mover, headerContent)
         })
     }
 
-    categoriesOpen (top, bottom, hide, move) {
-        let headerSize, heightOpen, marginOpen
+    categoriesOpen (top, bottom, hide, move, header) {
+        let marginOpen
         if (window.matchMedia("(min-width: 1136px)").matches) {
-            headerSize = 128
             marginOpen = 128
-            heightOpen = 226
         } else if (window.matchMedia("(min-width: 768px)").matches) {
-            headerSize = 106
             marginOpen = 106
-            heightOpen = 226
-        } else if (window.matchMedia("(min-width: 743px)").matches) {
-            headerSize = 65
-            marginOpen = 248
-            heightOpen = 163
-        } else if (window.matchMedia("(min-width: 533px)").matches) {
-            headerSize = 65
-            marginOpen = 248
-            heightOpen = 212
-        } else if (window.matchMedia("(min-width: 414px)").matches) {
-            headerSize = 65
-            marginOpen = 248
-            heightOpen = 261
         } else if (window.matchMedia("(min-width: 320px)").matches) {
-            headerSize = 65
             marginOpen = 248
-            heightOpen = 290
         }
-
 
         if (top.className === 'button__top-line-open') {
             top.classList.remove('button__top-line-open')
@@ -347,14 +329,14 @@ class HeaderContainer extends WebComponent {
             bottom.classList.remove('button__bottom-line-open')
             bottom.classList.add('button__bottom-line-closed')
             hide.style.margin = '0 0 0'
-            move.style.height = `${headerSize}px`
+            move.style.height = `${header.clientHeight}px`
         } else {
             top.classList.remove('button__top-line-closed')
             top.classList.add('button__top-line-open')
             bottom.classList.remove('button__bottom-line-closed')
             bottom.classList.add('button__bottom-line-open')
             hide.style.margin = `${marginOpen}px 0 0`
-            move.style.height = `${heightOpen}px`
+            move.style.height = `${header.clientHeight + hide.clientHeight}px`
         }
     }
 
