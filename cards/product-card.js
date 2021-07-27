@@ -281,7 +281,13 @@ class ProductCard extends WebComponent {
         this.discountAjuster(this.discount, saleText, sale, oldPrice, price, this.price)
 
         button.addEventListener('click', () => {
-            this.emit('add_product_to_cart', this.id)
+            this.emit('add_product_to_cart', {id: this.id, title: this.title, price: this.price, img: this.img, discount: this.discount})
+            const index = window.shop.basket.findIndex(product => product.id === this.id)
+            if (index !== -1) {
+                button.innerText = 'Удалить'
+            } else {
+                button.innerText = 'В корзину'
+            }
         })
         card.addEventListener('mouseenter', () => {
             this.aiming(sale, saleText, img)
@@ -292,18 +298,13 @@ class ProductCard extends WebComponent {
     }
 
     discountAjuster(disc, salerTxt, saler, old, newPr, pricer) {
-        let actualPrice;
         if (disc) {
             salerTxt.innerText = `Скидка ${disc} %`
             saler.style.opacity = 0.8
-            //как сократить?
-            let priceWithSpaces = pricer.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            old.innerText = `${priceWithSpaces} руб.`
-            actualPrice = (pricer * (100 - disc)/100).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            newPr.innerText = `${actualPrice} руб.`
+            old.innerText = this.f.numberFormat(pricer)
+            newPr.innerText = this.f.numberFormat((pricer * (100 - disc)/100))
         } else {
-            let actualPrice = pricer.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            newPr.innerText = `${actualPrice} руб.`
+            newPr.innerText = this.f.numberFormat(pricer)
         }
     }
 

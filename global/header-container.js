@@ -1,5 +1,3 @@
-import('./product-card.js')
-
 class HeaderContainer extends WebComponent {
     get css() { return `
 		<style>
@@ -9,7 +7,7 @@ class HeaderContainer extends WebComponent {
 		        align-items: center;
 		    }
 		    
-		    .header__content, .header__categories {
+		    .header-content, .header-categories {
 		        width: 95%;
 		        max-width: 1440px;
 		    }
@@ -21,7 +19,14 @@ class HeaderContainer extends WebComponent {
 		        transition: ease-out 0.3s;
 		    }
 		    
-		    .header__content {
+		    .logo {
+                color: azure;
+                margin: 0;
+                text-align: center;
+                font: 60px "Circe Bold";
+            }
+		    
+		    .header-content {
 		        width: 100%;
 		        padding: 20px 40px;
 		        position: fixed;
@@ -34,24 +39,62 @@ class HeaderContainer extends WebComponent {
 		        width: 300px;
 		    }
 		    
-		    .header__content {
+		    .header-content {
 		        display: flex;
 		        justify-content: space-between;
 		        align-items: center;
 		    }
 		    
-		    /*.basket-search-container {*/
-		    /*    */
-		    /*}*/
 		    
-		    .basket-icon-img, .search-icon-img{
-                height: 30px;
-                width: 30px;
-                cursor: pointer;
-                opacity: 0.8;
-		        transition: all 0.2s ease-out;
+		    .basket-search-container, .basket-container, .search-container {
+                display: flex;
+                align-items: center;
             }
             
+            .basket-container, .search-container {
+                width: 30px;
+                margin: 0 20px;
+            }
+            
+            .basket-search-container {
+                justify-content: flex-end;
+            }
+		    
+		    
+		    .category-button:hover, .basket-button:hover, .search-button:hover {
+		        opacity: 1;
+		    }
+		    
+		    .basket-button, .search-button {
+                border: 0;
+                width: 30px;
+                height: 30px;
+                background-color: transparent;
+                background-repeat: no-repeat;
+                opacity: .8;
+		        transition: ease-out 0.2s;
+            }
+            
+            .basket-button {
+                background-image: url("img/icons/basket-icon.svg"); /*если добавить вначале слэш, то путь будет правильный, но картинка не отобразится*/
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                z-index: 1;
+            }
+            
+            .search-button {
+                position: absolute;
+                top: 0;
+                right: 0;
+                background-image: url("img/icons/search-icon.svg"); /*то же самое что и выше с корзиной*/
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                z-index: 1;
+            }
             
             .search-container-form {
                 position: absolute;
@@ -65,21 +108,6 @@ class HeaderContainer extends WebComponent {
                 border-radius: 45px;
                 width: 300px;
                 padding: 10px 25px;
-                z-index: 1;
-            }
-            
-            .search-button {
-                position: absolute;
-                top: 0;
-                right: 0;
-                background: none;
-                border: 0;
-                width: 30px;
-                height: 30px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                cursor: pointer;
                 z-index: 1;
             }
             
@@ -97,6 +125,7 @@ class HeaderContainer extends WebComponent {
                 color: azure;
                 font: 16px Circe;
             }
+            
 		    
 		    .category-button-container {
 		        height: 30px;
@@ -113,11 +142,11 @@ class HeaderContainer extends WebComponent {
 		        transition: all 0.2s ease-out;
 		    }
 		    
-		    .category-button:hover, .basket-icon-img:hover, .search-icon-img:hover {
-		        opacity: 1;
+		    .basket-counter {
+		        color: azure;
 		    }
 		    
-		    .button__top-line-open, .button__bottom-line-open, .button__top-line-closed, .button__bottom-line-closed {
+		    .button-top-line-open, .button-bottom-line-open, .button-top-line-closed, .button-bottom-line-closed {
 		        height: 2px;
 		        width: 40px;
 		        background-color: azure;
@@ -126,50 +155,29 @@ class HeaderContainer extends WebComponent {
                 transition: all 0.3s ease-out;
 		    }
 		    
-		    .button__top-line-open {
+		    .button-top-line-open {
 		        transform: rotate(45deg);
 		        top: 16px;
 		        left: -3px;
 		    }
 		    
-		    .button__bottom-line-open {
+		    .button-bottom-line-open {
 		        transform: rotate(-45deg);
 		        top: 14px;
 		        left: -3px;
 		    }
 		    
-		    .button__top-line-closed {
+		    .button-top-line-closed {
 		        top: 12px;
 		        left: -3px;
 		    }
 		    
-		    .button__bottom-line-closed {
+		    .button-bottom-line-closed {
 		        top: 16px;
 		        left: -3px;
 		    }
 		    
-            .logo {
-                color: azure;
-                margin: 0;
-                text-align: center;
-                font: 60px "Circe Bold";
-            }
-            
-            .basket-search-container, .basket-container, .search-container {
-                display: flex;
-                align-items: center;
-            }
-            
-            .basket-container, .search-container {
-                width: 30px;
-                margin: 0 20px;
-            }
-            
-            .basket-search-container {
-                justify-content: flex-end;
-            }
-            
-            .header__categories-open {
+            .header-categories-open {
                 border-top: 1px solid azure;
                 border-bottom: 1px solid azure;
                 transition: all 0.3s ease-out;
@@ -215,7 +223,7 @@ class HeaderContainer extends WebComponent {
                     font: 30px "Circe Bold";
                 }
                 
-                .header__content {
+                .header-content {
                     width: 100%;
                     padding: 10px 20px;
                     margin-bottom: 100px;
@@ -234,7 +242,7 @@ class HeaderContainer extends WebComponent {
 		            margin: 0 5px;
 		        }
 		        
-		        .header__categories-open {
+		        .header-categories-open {
 		            top: -183px;
 		        }
 		        
@@ -251,27 +259,24 @@ class HeaderContainer extends WebComponent {
 
     get html() { return `
         <header class="header">
-            <div class="header__content">    
+            <div class="header-content">    
                 <div class="category-button-container">
                     <div class="category-button">
-                        <div class="button__top-line-closed" id="top-line"></div>
-                        <div class="button__bottom-line-closed" id="bottom-line"></div>
+                        <div class="button-top-line-closed" id="top-line"></div>
+                        <div class="button-bottom-line-closed" id="bottom-line"></div>
                     </div>
                 </div>
                 <h1 class="logo">cose rubate</h1>
                 <div class="basket-search-container">
                     <div class="basket-container">
-                        <div class="basket-counter"></div>
-                        <div class="basket-icon">
-                        <img src="img/icons/basket-icon-n.png" alt="" class="basket-icon-img">
-                        </div>
+                        <div class="basket-counter">0</div>
+                        <button class="basket-button"></button>
                     </div>
                     <div class="search-container">
                     <form class="search-container-form">
                         <input type="text" class="search-bar" placeholder="Поиск...">
                         <div class="search-icon">
                         <button class="search-button">
-                            <img src="img/icons/search-icon-n.png" alt="" class="search-icon-img">
                         </button>
                         </div>
                     </form>
@@ -279,7 +284,7 @@ class HeaderContainer extends WebComponent {
                 </div>
             </div>
             <div class="mover"></div>
-            <div class="header__categories-open" id="header__categories">
+            <div class="header-categories-open" id="header-categories">
                 <ul class="categories-container">
                 <li class="categories-button cat-all">Все</li>
                 <li class="categories-button cat-sale">Со скидкой</li>
@@ -302,15 +307,21 @@ class HeaderContainer extends WebComponent {
 
     async connectedCallback() {
         const categoryButton = this.shadowRoot.querySelector('.category-button')
-        const headerContent = this.shadowRoot.querySelector('.header__content')
-        const categories = this.shadowRoot.querySelector('#header__categories')
+        const headerContent = this.shadowRoot.querySelector('.header-content')
+        const categories = this.shadowRoot.querySelector('#header-categories')
         const topLine = this.shadowRoot.querySelector('#top-line')
         const bottomLine = this.shadowRoot.querySelector('#bottom-line')
         const mover = this.shadowRoot.querySelector('.mover')
+        const basketCounter = this.shadowRoot.querySelector('.basket-counter')
 
+        window.addEventListener('basket-changed', () => {
+            basketCounter.innerText = window.shop.basket.length
+        })
         categoryButton.addEventListener('click', () => {
             this.categoriesOpen(topLine, bottomLine, categories, mover, headerContent)
         })
+
+        this.updateCount()
     }
 
     categoriesOpen (top, bottom, hide, move, header) {
@@ -323,21 +334,27 @@ class HeaderContainer extends WebComponent {
             marginOpen = 248
         }
 
-        if (top.className === 'button__top-line-open') {
-            top.classList.remove('button__top-line-open')
-            top.classList.add('button__top-line-closed')
-            bottom.classList.remove('button__bottom-line-open')
-            bottom.classList.add('button__bottom-line-closed')
+        if (top.className === 'button-top-line-open') {
+            top.classList.remove('button-top-line-open')
+            top.classList.add('button-top-line-closed')
+            bottom.classList.remove('button-bottom-line-open')
+            bottom.classList.add('button-bottom-line-closed')
             hide.style.margin = '0 0 0'
             move.style.height = `${header.clientHeight}px`
         } else {
-            top.classList.remove('button__top-line-closed')
-            top.classList.add('button__top-line-open')
-            bottom.classList.remove('button__bottom-line-closed')
-            bottom.classList.add('button__bottom-line-open')
+            top.classList.remove('button-top-line-closed')
+            top.classList.add('button-top-line-open')
+            bottom.classList.remove('button-bottom-line-closed')
+            bottom.classList.add('button-bottom-line-open')
             hide.style.margin = `${marginOpen}px 0 0`
             move.style.height = `${header.clientHeight + hide.clientHeight}px`
         }
+    }
+
+    updateCount() {
+        document.addEventListener('update-counter', ({detail}) => {
+            this.shadowRoot.querySelector('.basket-counter').innerText = detail
+        })
     }
 
 

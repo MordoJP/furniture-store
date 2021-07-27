@@ -22,20 +22,16 @@ class CardsContainer extends WebComponent {
       <div class="container">
         
       </div>
-      
-      <div class="amount"></div>
 	`}
 
     constructor() {
         super()
-        this.amount = 0
     }
 
     async connectedCallback() {
         this.createProductList().then(() => {
             this.renderCards()
         })
-        this.addListeners()
     }
 
     async createProductList() {
@@ -44,7 +40,7 @@ class CardsContainer extends WebComponent {
         this.products.forEach(prod => {
             prod.categoryName = this.getCategoryName(prod.category)
         })
-        window.shop = {products : this.products} //Что это значит??
+        window.shop.products = this.products //Что это значит??
     }
 
     async getProducts() {
@@ -78,28 +74,6 @@ class CardsContainer extends WebComponent {
         }
     }
 
-    addListeners() {
-        //и тут что значит в фигурных скобках?
-        this.addEventListener('add_product_to_cart', ({detail}) => {
-            const idx = window.shop.products.findIndex(el => el.id === +detail)
-            this.calculateAmount(window.shop.products[idx])
-        })
-    }
-
-    calculateAmount(product) {
-        const price = product.price
-        if (product.discount) {
-            const priceDiscount = (product.price * (100 - product.discount)/100)
-            this.amount += priceDiscount
-        } else {
-            this.amount += price
-        }
-        this.renderAmount()
-    }
-
-    renderAmount() {
-        this.shadowRoot.querySelector('.amount').innerText = this.amount
-    }
 }
 
 customElements.define('cards-container', CardsContainer)

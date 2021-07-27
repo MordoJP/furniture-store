@@ -15,9 +15,7 @@ class ShopCart extends WebComponent {
     }
 
     async connectedCallback() {
-        window.addEventListener('my-custom-event', (e) => {
-            this.shadowRoot.querySelector('p').innerText = e.detail
-        })
+
     }
 }
 
