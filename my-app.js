@@ -13,6 +13,7 @@ class MyApp extends WebComponent {
 
     get html() { return `
         <header-container></header-container>
+        <shop-cart></shop-cart>
         <cards-container></cards-container>
 	`}
 

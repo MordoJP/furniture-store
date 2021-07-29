@@ -274,8 +274,7 @@ class ProductCard extends WebComponent {
         const oldPrice = this.shadowRoot.querySelector('.old-price')
 
         category.innerText = this.categoryName
-
-            title.innerText = `${this.title}`
+        title.innerText = `${this.title}`
         img.style.backgroundImage = `url('img/products/${this.img}')`
         price.innerText = `${this.price} руб.`
         this.discountAjuster(this.discount, saleText, sale, oldPrice, price, this.price)

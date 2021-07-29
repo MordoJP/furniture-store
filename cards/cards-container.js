@@ -31,6 +31,7 @@ class CardsContainer extends WebComponent {
     async connectedCallback() {
         this.createProductList().then(() => {
             this.renderCards()
+            window.addEventListener('render-cards', () => this.renderCards())
         })
     }
 
@@ -41,6 +42,7 @@ class CardsContainer extends WebComponent {
             prod.categoryName = this.getCategoryName(prod.category)
         })
         window.shop.products = this.products
+        window.shop.shownCards = Object.assign(window.shop.products)
     }
 
     async getProducts() {
@@ -58,8 +60,9 @@ class CardsContainer extends WebComponent {
     }
 
     renderCards() {
-        if (this.products.length) {
-            const cards = this.products.map(card => {
+        this.shadowRoot.querySelector('.container').innerHTML = ''
+        if (window.shop.shownCards.length) {
+            const cards = window.shop.shownCards.map(card => {
                 const productCard = document.createElement('product-card')
                 productCard.id = card.id
                 productCard.img = card.img

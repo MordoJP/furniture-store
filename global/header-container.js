@@ -331,7 +331,6 @@ class HeaderContainer extends WebComponent {
         })
         this.updateCount(basketCounter)
 
-
         categoryButton.addEventListener('click', () => {
             this.categoriesOpen(topLine, bottomLine, categories, mover, headerContent)
         })
@@ -372,10 +371,12 @@ class HeaderContainer extends WebComponent {
         allCat.className = 'categories-button'
         allCat.id = 'cat-all'
         allCat.innerText = 'Все'
+        allCat.addEventListener('click', (e) => {this.categoryFilter(e)})
         const discCat = document.createElement('div')
         discCat.className = 'categories-button'
         discCat.id = 'cat-sale'
         discCat.innerText = 'Со скидкой'
+        discCat.addEventListener('click', (e) => {this.categoryFilter(e)})
         categoriesBox.append(allCat, discCat)
 
         if (window.shop.categories.length) {
@@ -384,15 +385,26 @@ class HeaderContainer extends WebComponent {
                 newCat.id = `cat-${cat.id}`
                 newCat.className = 'categories-button'
                 newCat.innerText = cat.severalNames
+                newCat.addEventListener('click', (e) => {this.categoryFilter(e)})
                 return newCat
             })
             categoriesBox.append(...cats)
         }
+
+    }
+
+    //category filter function
+    categoryFilter(e){
+        console.log(e.target.id)
+        if (e.target.id === 'cat-all'){
+            window.shop.shownCards = window.shop.products
+        } else if (e.target.id === 'cat-sale') {
+            window.shop.shownCards = window.shop.products.filter(card => card.discount)
+        } else {
+            window.shop.shownCards = window.shop.products.filter(card => card.category === +e.target.id[4])
+        }
+        this.emit('render-cards')
     }
 }
-
-// categoryFilter(){
-//
-// }
 
 customElements.define('header-container', HeaderContainer)
