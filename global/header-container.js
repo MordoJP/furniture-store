@@ -8,30 +8,32 @@ class HeaderContainer extends WebComponent {
 		        align-items: center;
 		    }
 		    
+		    .mover {
+		        transition: ease-out 0.3s;
+		        height: 138px;
+		    }
+		    
 		    .header-container {
 		        position: fixed;
 		        z-index: 2;
 		        display: flex;
 		        flex-direction: column;
 		        align-items: center;
-		        background-color: black;
 		    }
 		    
 		    .header-content, .header-categories {
 		        width: 95%;
 		        max-width: 1440px;
-		        height: auto;
+		        background-color: black;
 		    }
 		    
 		    .header-content {
 		        width: 100%;
 		        padding: 20px 40px;
-		        background-color: black;
 		        z-index: 3;
 		        display: flex;
 		        justify-content: space-between;
 		        align-items: center;
-		        position: absolute;
 		    }
 		    
 		    /*header-content inner items*/
@@ -196,8 +198,7 @@ class HeaderContainer extends WebComponent {
                 border-bottom: 1px solid azure;
                 transition: all 0.3s ease-out;
                 box-sizing: border-box;
-                background-color: black;
-                transform: translateY(-320px);
+                transform: translateY(-250px);
             }
             
             .categories-container {
@@ -230,17 +231,25 @@ class HeaderContainer extends WebComponent {
                 .category-button-container, .basket-search-container {
 		            width: 200px;
 		        }
+		        
+		        .mover {
+		            height: 116px;
+		        }
             }
             
             @media screen and (max-width: 767px) {
                 .logo {
                     font: 30px "Circe Bold";
+                    width: 150px;
                 }
+                
+                .mover {
+		            height: 75px;
+		        }
                 
                 .header-content {
                     width: 100%;
                     padding: 10px 20px;
-                    margin-bottom: 100px;
                 }
                 
                 .basket-icon-img, .search-icon-img {
@@ -256,14 +265,6 @@ class HeaderContainer extends WebComponent {
 		            margin: 0 5px;
 		        }
 		        
-		        .header-categories-open {
-		            top: -183px;
-		        }
-		        
-		        .mover {
-		            height: 65px;
-		        }
-		        
 		        .search-container-form:hover> .search-bar{
                     width: 250px;
                 }
@@ -273,6 +274,7 @@ class HeaderContainer extends WebComponent {
 
     get html() { return `
         <header class="header">
+            <div class="mover"></div>
             <div class="header-container">
                 <div class="header-content">    
                     <div class="category-button-container">
@@ -310,9 +312,9 @@ class HeaderContainer extends WebComponent {
     }
 
     async connectedCallback() {
-        const header = this.shadowRoot.querySelector('.header')
+        const headerContent = this.shadowRoot.querySelector('.header-content')
         const categoryButton = this.shadowRoot.querySelector('.category-button')
-        // const headerContent = this.shadowRoot.querySelector('.header-content')
+        const mover = this.shadowRoot.querySelector('.mover')
         const categories = this.shadowRoot.querySelector('.header-categories')
         const topLine = this.shadowRoot.querySelector('#top-line')
         const bottomLine = this.shadowRoot.querySelector('#bottom-line')
@@ -329,8 +331,9 @@ class HeaderContainer extends WebComponent {
         })
         this.updateCount(basketCounter)
 
+
         categoryButton.addEventListener('click', () => {
-            this.categoriesOpen(topLine, bottomLine, categories)
+            this.categoriesOpen(topLine, bottomLine, categories, mover, headerContent)
         })
 
         window.addEventListener('create-categories', () => {
@@ -338,31 +341,22 @@ class HeaderContainer extends WebComponent {
         })
     }
 
-    categoriesOpen (top, bottom, hide) {
-        // let marginOpen
-        // if (window.matchMedia("(min-width: 1136px)").matches) {
-        //     marginOpen = 128
-        // } else if (window.matchMedia("(min-width: 768px)").matches) {
-        //     marginOpen = 106
-        // } else if (window.matchMedia("(min-width: 320px)").matches) {
-        //     marginOpen = 248
-        // }
-
-        //это надо убрать
+    //function for open/close category-navigation
+    categoriesOpen (top, bottom, hide, move, header) {
         if (top.className === 'button-top-line-open') {
             top.classList.remove('button-top-line-open')
             top.classList.add('button-top-line-closed')
             bottom.classList.remove('button-bottom-line-open')
             bottom.classList.add('button-bottom-line-closed')
-            hide.style.transform = 'translateY(-320px)'
-            // hide.style.margin = '0 0 0'
+            hide.style.transform = 'translateY(-250px)'
+            move.style.height = `${header.clientHeight + 10}px`
         } else {
             top.classList.remove('button-top-line-closed')
             top.classList.add('button-top-line-open')
             bottom.classList.remove('button-bottom-line-closed')
             bottom.classList.add('button-bottom-line-open')
-            // hide.style.margin = `${marginOpen}px 0 0`
-            hide.style.transform = 'translateY(132px)'
+            hide.style.transform = 'translateY(0)'
+            move.style.height = `${header.clientHeight + hide.clientHeight}px`
         }
     }
 
@@ -372,7 +366,7 @@ class HeaderContainer extends WebComponent {
         })
     }
 
-    //создание кнопок категорий
+    //create category buttons
     render(categoriesBox) {
         const allCat = document.createElement('div')
         allCat.className = 'categories-button'
@@ -396,5 +390,9 @@ class HeaderContainer extends WebComponent {
         }
     }
 }
+
+// categoryFilter(){
+//
+// }
 
 customElements.define('header-container', HeaderContainer)
