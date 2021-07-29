@@ -36,8 +36,6 @@ class MyApp extends WebComponent {
 
     basketCounter() {
         return window.shop.basket.reduce((accumulator, currentValue) => {
-            console.log(accumulator)
-            console.log(currentValue)
             return +accumulator + +currentValue.totalPrice;
         }, 0)
     }

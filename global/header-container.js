@@ -1,24 +1,40 @@
 class HeaderContainer extends WebComponent {
     get css() { return `
 		<style>
+		    /*basic header styles*/
 		    .header {
 		        display: flex;
 		        flex-direction: column;
 		        align-items: center;
 		    }
 		    
+		    .header-container {
+		        position: fixed;
+		        z-index: 2;
+		        display: flex;
+		        flex-direction: column;
+		        align-items: center;
+		        background-color: black;
+		    }
+		    
 		    .header-content, .header-categories {
 		        width: 95%;
 		        max-width: 1440px;
+		        height: auto;
 		    }
 		    
-		    .mover {
+		    .header-content {
 		        width: 100%;
-		        height: 128px;
+		        padding: 20px 40px;
 		        background-color: black;
-		        transition: ease-out 0.3s;
+		        z-index: 3;
+		        display: flex;
+		        justify-content: space-between;
+		        align-items: center;
+		        position: absolute;
 		    }
 		    
+		    /*header-content inner items*/
 		    .logo {
                 color: azure;
                 margin: 0;
@@ -26,26 +42,11 @@ class HeaderContainer extends WebComponent {
                 font: 60px "Circe Bold";
             }
 		    
-		    .header-content {
-		        width: 100%;
-		        padding: 20px 40px;
-		        position: fixed;
-		        margin-bottom: 100px;
-		        z-index: 5;
-		        background-color: black;
-		    }
-		    
 		    .category-button-container, .logo, .basket-search-container {
 		        width: 300px;
 		    }
 		    
-		    .header-content {
-		        display: flex;
-		        justify-content: space-between;
-		        align-items: center;
-		    }
-		    
-		    
+		    /*basket styles*/
 		    .basket-search-container, .basket-container, .search-container {
                 display: flex;
                 align-items: center;
@@ -81,9 +82,26 @@ class HeaderContainer extends WebComponent {
                 justify-content: center;
                 align-items: center;
                 cursor: pointer;
-                z-index: 1;
+                position: absolute;
             }
             
+            .basket-counter {
+		        color: azure;
+		        width: 25px;
+		        height: 25px;
+		        position: relative;
+		        font: 16px "Circe ExtraBold";
+		        background-color: #242424;
+		        border-radius: 50%;
+		        display: none;
+		        align-items: center;
+		        justify-content: center;
+		        top: -7px;
+		        left: 17px;
+		        z-index: 4;
+		    }
+		    
+		    /*search styles*/
             .search-button {
                 position: absolute;
                 top: 0;
@@ -126,7 +144,7 @@ class HeaderContainer extends WebComponent {
                 font: 16px Circe;
             }
             
-		    
+		    /*category styles*/
 		    .category-button-container {
 		        height: 30px;
 		        display: flex;
@@ -134,16 +152,14 @@ class HeaderContainer extends WebComponent {
 		    }
 		    
 		    .category-button {
-		        width: 33px;
-		        height: 33px;
+		        width: 40px;
+		        height: 40px;
+		        background-color: transparent;
+		        border: 0;
 		        cursor: pointer;
 		        position: absolute;
 		        opacity: 0.8;
 		        transition: all 0.2s ease-out;
-		    }
-		    
-		    .basket-counter {
-		        color: azure;
 		    }
 		    
 		    .button-top-line-open, .button-bottom-line-open, .button-top-line-closed, .button-bottom-line-closed {
@@ -152,39 +168,36 @@ class HeaderContainer extends WebComponent {
 		        background-color: azure;
 		        border-radius: 1px 1px 1px 1px;
 		        position: relative;
+		        left: -6px;
                 transition: all 0.3s ease-out;
 		    }
 		    
 		    .button-top-line-open {
 		        transform: rotate(45deg);
-		        top: 16px;
-		        left: -3px;
+		        top: 1px;
 		    }
 		    
 		    .button-bottom-line-open {
 		        transform: rotate(-45deg);
-		        top: 14px;
-		        left: -3px;
+		        top: 0;
 		    }
 		    
 		    .button-top-line-closed {
-		        top: 12px;
-		        left: -3px;
+		        top: -4px;
 		    }
 		    
 		    .button-bottom-line-closed {
-		        top: 16px;
-		        left: -3px;
+		        top: 5px;
 		    }
 		    
-            .header-categories-open {
+            .header-categories {
+                height: auto;
                 border-top: 1px solid azure;
                 border-bottom: 1px solid azure;
                 transition: all 0.3s ease-out;
                 box-sizing: border-box;
-                position: fixed;
                 background-color: black;
-                z-index: 4;
+                transform: translateY(-320px);
             }
             
             .categories-container {
@@ -208,6 +221,7 @@ class HeaderContainer extends WebComponent {
                 opacity: 1;
             }
             
+            /*adaptive styles*/
             @media screen and (max-width: 1135px) {
                 .logo {
                     font: 45px "Circe Bold";
@@ -259,126 +273,128 @@ class HeaderContainer extends WebComponent {
 
     get html() { return `
         <header class="header">
-            <div class="header-content">    
-                <div class="category-button-container">
-                    <div class="category-button">
-                        <div class="button-top-line-closed" id="top-line"></div>
-                        <div class="button-bottom-line-closed" id="bottom-line"></div>
-                    </div>
-                </div>
-                <h1 class="logo">cose rubate</h1>
-                <div class="basket-search-container">
-                    <div class="basket-container">
-                        <div class="basket-counter">0</div>
-                        <button class="basket-button"></button>
-                    </div>
-                    <div class="search-container">
-                    <form class="search-container-form">
-                        <input type="text" class="search-bar" placeholder="Поиск...">
-                        <div class="search-icon">
-                        <button class="search-button">
+            <div class="header-container">
+                <div class="header-content">    
+                    <div class="category-button-container">
+                        <button class="category-button">
+                            <div class="button-top-line-closed" id="top-line"></div>
+                            <div class="button-bottom-line-closed" id="bottom-line"></div>
                         </button>
+                    </div>
+                    <h1 class="logo">cose rubate</h1>
+                    <div class="basket-search-container">
+                        <div class="basket-container">
+                            <div class="basket-counter">0</div>
+                            <button class="basket-button"></button>
                         </div>
-                    </form>
+                        <div class="search-container">
+                        <form class="search-container-form">
+                            <input type="text" class="search-bar" placeholder="Поиск...">
+                            <div class="search-icon">
+                            <button class="search-button">
+                            </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </div>
-            <div class="mover"></div>
-            <div class="header-categories-open" id="header-categories">
-                <ul class="categories-container">
-                <li class="categories-button cat-all">Все</li>
-                <li class="categories-button cat-sale">Со скидкой</li>
-                <li class="categories-button cat-sofa">Диваны</li>
-                <li class="categories-button cat-armchair">Кресла</li>
-                <li class="categories-button cat-bed">Кровати</li>
-                <li class="categories-button cat-chair">Стулья</li>
-                <li class="categories-button cat-table">Столы</li>
-                <li class="categories-button cat-lighter">Светильники</li>
-                <li class="categories-button cat-style">Декоративные украшения</li>
-                </ul>
+                </div>
+                <div class="header-categories">
+                    <div class="categories-container"></div>
+                </div>
             </div>
         </header>
 	`}
 
     constructor() {
         super()
-        this.amount = 0
     }
 
     async connectedCallback() {
+        const header = this.shadowRoot.querySelector('.header')
         const categoryButton = this.shadowRoot.querySelector('.category-button')
-        const headerContent = this.shadowRoot.querySelector('.header-content')
-        const categories = this.shadowRoot.querySelector('#header-categories')
+        // const headerContent = this.shadowRoot.querySelector('.header-content')
+        const categories = this.shadowRoot.querySelector('.header-categories')
         const topLine = this.shadowRoot.querySelector('#top-line')
         const bottomLine = this.shadowRoot.querySelector('#bottom-line')
-        const mover = this.shadowRoot.querySelector('.mover')
         const basketCounter = this.shadowRoot.querySelector('.basket-counter')
+        const categoriesContainer = this.shadowRoot.querySelector('.categories-container')
 
         window.addEventListener('basket-changed', () => {
             basketCounter.innerText = window.shop.basket.length
+            if (window.shop.basket.length === 0){
+                basketCounter.style.display = 'none'
+            } else {
+                basketCounter.style.display = 'flex'
+            }
         })
+        this.updateCount(basketCounter)
+
         categoryButton.addEventListener('click', () => {
-            this.categoriesOpen(topLine, bottomLine, categories, mover, headerContent)
+            this.categoriesOpen(topLine, bottomLine, categories)
         })
 
-        this.updateCount()
+        window.addEventListener('create-categories', () => {
+            this.render(categoriesContainer)
+        })
     }
 
-    categoriesOpen (top, bottom, hide, move, header) {
-        let marginOpen
-        if (window.matchMedia("(min-width: 1136px)").matches) {
-            marginOpen = 128
-        } else if (window.matchMedia("(min-width: 768px)").matches) {
-            marginOpen = 106
-        } else if (window.matchMedia("(min-width: 320px)").matches) {
-            marginOpen = 248
-        }
+    categoriesOpen (top, bottom, hide) {
+        // let marginOpen
+        // if (window.matchMedia("(min-width: 1136px)").matches) {
+        //     marginOpen = 128
+        // } else if (window.matchMedia("(min-width: 768px)").matches) {
+        //     marginOpen = 106
+        // } else if (window.matchMedia("(min-width: 320px)").matches) {
+        //     marginOpen = 248
+        // }
 
+        //это надо убрать
         if (top.className === 'button-top-line-open') {
             top.classList.remove('button-top-line-open')
             top.classList.add('button-top-line-closed')
             bottom.classList.remove('button-bottom-line-open')
             bottom.classList.add('button-bottom-line-closed')
-            hide.style.margin = '0 0 0'
-            move.style.height = `${header.clientHeight}px`
+            hide.style.transform = 'translateY(-320px)'
+            // hide.style.margin = '0 0 0'
         } else {
             top.classList.remove('button-top-line-closed')
             top.classList.add('button-top-line-open')
             bottom.classList.remove('button-bottom-line-closed')
             bottom.classList.add('button-bottom-line-open')
-            hide.style.margin = `${marginOpen}px 0 0`
-            move.style.height = `${header.clientHeight + hide.clientHeight}px`
+            // hide.style.margin = `${marginOpen}px 0 0`
+            hide.style.transform = 'translateY(132px)'
         }
     }
 
-    updateCount() {
+    updateCount(basketCounter) {
         document.addEventListener('update-counter', ({detail}) => {
-            this.shadowRoot.querySelector('.basket-counter').innerText = detail
+            basketCounter.innerText = detail
         })
     }
 
+    //создание кнопок категорий
+    render(categoriesBox) {
+        const allCat = document.createElement('div')
+        allCat.className = 'categories-button'
+        allCat.id = 'cat-all'
+        allCat.innerText = 'Все'
+        const discCat = document.createElement('div')
+        discCat.className = 'categories-button'
+        discCat.id = 'cat-sale'
+        discCat.innerText = 'Со скидкой'
+        categoriesBox.append(allCat, discCat)
 
-    // addListeners() {
-    //     this.addEventListener('add_product_to_cart', ({detail}) => {
-    //         const idx = window.shop.products.findIndex(el => el.id === +detail)
-    //         this.calculateAmount(window.shop.products[idx])
-    //     })
-    // }
-    //
-    // calculateAmount(product) {
-    //     const price = product.price
-    //     if (product.discount) {
-    //         const priceDiscount = (product.price * (100 - product.discount)/100)
-    //         this.amount += priceDiscount
-    //     } else {
-    //         this.amount += price
-    //     }
-    //     this.renderAmount()
-    // }
-    //
-    // renderAmount() {
-    //     this.shadowRoot.querySelector('.amount').innerText = this.amount
-    // }
+        if (window.shop.categories.length) {
+            const cats = window.shop.categories.map(cat => {
+                const newCat = document.createElement('div')
+                newCat.id = `cat-${cat.id}`
+                newCat.className = 'categories-button'
+                newCat.innerText = cat.severalNames
+                return newCat
+            })
+            categoriesBox.append(...cats)
+        }
+    }
 }
 
 customElements.define('header-container', HeaderContainer)

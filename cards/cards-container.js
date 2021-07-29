@@ -40,7 +40,7 @@ class CardsContainer extends WebComponent {
         this.products.forEach(prod => {
             prod.categoryName = this.getCategoryName(prod.category)
         })
-        window.shop.products = this.products //Что это значит??
+        window.shop.products = this.products
     }
 
     async getProducts() {
@@ -48,12 +48,12 @@ class CardsContainer extends WebComponent {
     }
 
     async getCategory() {
-        this.categories = await this.fetch('get','categories/')
+        window.shop.categories = await this.fetch('get','categories/')
+        this.emit('create-categories')
     }
 
     getCategoryName(categoryId) {
-        //что означает запись name в фигурных скобках?
-        const { name } = this.categories.find(names => names.id === categoryId)
+        const { name } = window.shop.categories.find(names => names.id === categoryId)
         return name
     }
 
@@ -73,7 +73,6 @@ class CardsContainer extends WebComponent {
             this.shadowRoot.querySelector('.container').append(...cards)
         }
     }
-
 }
 
 customElements.define('cards-container', CardsContainer)
