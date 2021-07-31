@@ -282,6 +282,7 @@ class ProductCard extends WebComponent {
         button.addEventListener('click', () => {
             this.emit('add_product_to_cart', {id: this.id, title: this.title, price: this.price, img: this.img, discount: this.discount})
             const index = window.shop.basket.findIndex(product => product.id === this.id)
+            this.emit('basket-create-product')
             if (index !== -1) {
                 button.innerText = 'Удалить'
             } else {

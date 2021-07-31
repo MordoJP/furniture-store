@@ -113,7 +113,7 @@ class HeaderContainer extends WebComponent {
                 justify-content: center;
                 align-items: center;
                 cursor: pointer;
-                z-index: 1;
+                z-index: 5;
             }
             
             .search-container-form {
@@ -128,7 +128,7 @@ class HeaderContainer extends WebComponent {
                 border-radius: 45px;
                 width: 300px;
                 padding: 10px 25px;
-                z-index: 1;
+                z-index: 4;
             }
             
             .search-bar {
@@ -320,6 +320,7 @@ class HeaderContainer extends WebComponent {
         const bottomLine = this.shadowRoot.querySelector('#bottom-line')
         const basketCounter = this.shadowRoot.querySelector('.basket-counter')
         const categoriesContainer = this.shadowRoot.querySelector('.categories-container')
+        const basketButton = this.shadowRoot.querySelector('.basket-button')
 
         window.addEventListener('basket-changed', () => {
             basketCounter.innerText = window.shop.basket.length
@@ -337,6 +338,11 @@ class HeaderContainer extends WebComponent {
 
         window.addEventListener('create-categories', () => {
             this.render(categoriesContainer)
+        })
+
+        basketButton.addEventListener('click', () => {
+            window.shop.class === 'basket-closed' ? window.shop.class = 'basket-active' : window.shop.class = 'basket-closed'
+            this.emit('basket-status')
         })
     }
 
@@ -390,7 +396,6 @@ class HeaderContainer extends WebComponent {
             })
             categoriesBox.append(...cats)
         }
-
     }
 
     //category filter function
