@@ -90,7 +90,6 @@ class ShopCart extends WebComponent {
                 height: 40px;
                 opacity: .7;
                 cursor: pointer;
-                transition: all 0.2s ease-out;
             }
             
             .basket-close:hover {
@@ -306,7 +305,7 @@ class ShopCart extends WebComponent {
                         <div class="info-container">
                             <div class="price-container">
                                 <div class="price-title">Сумма заказа</div>
-                                <div class="price-total">100 780 00 руб</div>
+                                <div class="price-total"></div>
                             </div>
                             <div class="amount-container">
                                 <div class="amount-title">Количество товара</div>
@@ -335,23 +334,52 @@ class ShopCart extends WebComponent {
     }
 
     async connectedCallback() {
-        window.shop.class = 'basket-closed'
+        await this.getPromo()
+        window.shop.promos = this.promos
+
         const basket = this.shadowRoot.querySelector('#basket')
         const basketCloser = this.shadowRoot.querySelector('.basket-close')
         const basketProducts = this.shadowRoot.querySelector('.basket-products-block')
         const emptyBasket = this.shadowRoot.querySelector('.basket-empty')
         const basketInfo = this.shadowRoot.querySelector('.basket-info')
         const basketClear = this.shadowRoot.querySelector('.clear-basket')
+        const totalPrice = this.shadowRoot.querySelector('.price-total')
+        const count = this.shadowRoot.querySelector('.amount-total')
+        const overlay = this.shadowRoot.querySelector('.overlay')
+        const promo = this.shadowRoot.querySelector('.promo-place')
 
+        window.shop.class = 'basket-closed'
         window.addEventListener('basket-status', () => {this.openBasket(basket)})
         basketCloser.addEventListener('click', () => {
             window.shop.class = 'basket-closed'
             this.openBasket(basket)
         })
+        overlay.addEventListener('click', () => {
+            window.shop.class = 'basket-closed'
+            this.openBasket(basket)
+        })
+
+        window.addEventListener('change-total-price', () => {
+            window.shop.totalPrice = this.reduceValue('totalPrice')
+            totalPrice.innerText = this.f.numberFormat(this.reduceValue('totalPrice'))
+            count.innerText = `${this.reduceValue('count')} шт.`
+
+        })
+
+        promo.addEventListener('input', (e) => {
+            const index = window.shop.promos.findIndex(p => p.name === e.target.value)
+            if (index !== -1) {
+                console.log(1)
+                totalPrice.innerText = this.f.numberFormat(window.shop.totalPrice * (100 - window.shop.promos[index].discount) / 100)
+            } else {
+                console.log(2)
+                totalPrice.innerText = this.f.numberFormat(window.shop.totalPrice)
+            }
+        })
 
         window.addEventListener('basket-create-product', () => {this.productsAdder(basketProducts, emptyBasket, basketInfo)})
 
-        basketClear.addEventListener('click', this.cleaner())
+        basketClear.addEventListener('click', () => this.cleaner())
     }
 
     openBasket (basketClass){
@@ -364,34 +392,80 @@ class ShopCart extends WebComponent {
         }
     }
 
+    async getPromo() {
+        this.promos = await this.fetch('get','promo/')
+    }
+
     productsAdder(cont, empty, baskInfo) {
-        cont.innerHTML = ''
+        while (cont.firstChild) cont.firstChild.remove()
         if (window.shop.basket.length) {
             empty.style.display = 'none'
             baskInfo.style.display = 'flex'
             cont.style.display = 'flex'
-            console.log(1)
             window.shop.basket.forEach(prod => {
                 const product = document.createElement('div')
                 product.className = 'product-container'
                 product.innerHTML = `<div class="product-left-part">
-                <div class="product-image" style="background-image: url('img/products/${prod.img}')"></div> /*так находит изображение*/
+                <div class="product-image" style="background-image: url('img/products/${prod.img}')"></div>
                 <div class="product-left-info">
                 <h2 class="product-title">${prod.title}</h2>
                 <div class="price-container">
                 <span ${this.discountChecker(prod.discount, prod.price)} / штука</span>
                 </div>
                 <div class="product-amount-controls">
-                    <button class="product-amount-minus">-</button>
+                    <button class="product-amount-minus" id="min-${prod.id}">-</button>
                     <span class="product-amount">${prod.count}</span>
-                    <button class="product-amount-plus">+</button>
+                    <button class="product-amount-plus" id="pls-${prod.id}">+</button>
                 </div>
                 </div>
                 </div>
                 <div class="product-right-part">
-                <span class="product-price-all" id=prc-"${prod.id}">${this.f.numberFormat(this.discountCheckerNumb(prod.discount, prod.price) * prod.count)}</span>
+                <span class="product-price-all" id="prc-${prod.id}">${this.f.numberFormat(this.discountCheckerNumb(prod.discount, prod.price) * prod.count)}</span>
                 <button class="product-delete" id="del-${prod.id}">Удалить</button>
                 </div>`
+                const deleteProduct = product.querySelector('.product-delete')
+                const prodMinus = product.querySelector('.product-amount-minus')
+                const prodPlus = product.querySelector('.product-amount-plus')
+                deleteProduct.addEventListener('click', (e) => {
+                    const index = window.shop.basket.findIndex(product => product.id === e.target.id.split('-')[1])
+                    window.shop.basket.splice(index, 1)
+                    this.emit('basket-create-product')
+                    this.emit('change-add-button')
+                    this.emit('update-counter')
+                    this.emit('basket-changed')
+                    this.emit('change-total-price')
+                    this.emit('header-count')
+                })
+                prodMinus.addEventListener('click', (e) => {
+                    const index = window.shop.basket.findIndex(product => product.id === e.target.id.split('-')[1])
+                    const bask = window.shop.basket[index]
+                    if (bask.count === 1) {
+                        window.shop.basket.splice(index, 1)
+                    }
+                    bask.count--
+                    bask.totalPrice = bask.discount ? bask.price * (100 - bask.discount) / 100 * bask.count : bask.price * bask.count
+                    this.emit('basket-create-product')
+                    this.emit('change-add-button')
+                    this.emit('update-counter')
+                    this.emit('basket-changed')
+                    this.emit('change-total-price')
+                    console.log(window.shop.basket)
+                })
+                prodPlus.addEventListener('click', (e) => {
+                    const index = window.shop.basket.findIndex(product => product.id === e.target.id.split('-')[1])
+                    const bask = window.shop.basket[index]
+                    bask.count++
+                    bask.totalPrice = bask.discount ? bask.price * (100 - bask.discount) / 100 * bask.count : bask.price * bask.count
+                    this.emit('basket-create-product')
+                    this.emit('change-add-button')
+                    this.emit('update-counter')
+                    this.emit('basket-changed')
+                    this.emit('change-total-price')
+                    console.log(window.shop.basket)
+                })
+
+
+
                 cont.append(product)
             })
         } else {
@@ -422,7 +496,17 @@ class ShopCart extends WebComponent {
     cleaner() {
         window.shop.basket = []
         this.emit('basket-create-product')
+        this.emit('basket-changed')
+        this.emit('change-add-button')
+        this.emit('update-counter')
     }
+
+    reduceValue(val) {
+        const reducer = (accumulator, currentValue) => accumulator + currentValue[val]
+        return window.shop.basket.reduce(reducer, 0)
+    }
+
+
 }
 
 customElements.define('shop-cart', ShopCart)

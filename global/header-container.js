@@ -79,7 +79,7 @@ class HeaderContainer extends WebComponent {
             }
             
             .basket-button {
-                background-image: url("img/icons/basket-icon.svg"); /*если добавить вначале слэш, то путь будет правильный, но картинка не отобразится*/
+                background-image: url("img/icons/basket-icon.svg");
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -108,7 +108,7 @@ class HeaderContainer extends WebComponent {
                 position: absolute;
                 top: 0;
                 right: 0;
-                background-image: url("img/icons/search-icon.svg"); /*то же самое что и выше с корзиной*/
+                background-image: url("img/icons/search-icon.svg");
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -193,7 +193,7 @@ class HeaderContainer extends WebComponent {
 		    }
 		    
             .header-categories {
-                height: auto;
+                height: 0;
                 border-top: 1px solid azure;
                 border-bottom: 1px solid azure;
                 transition: all 0.3s ease-out;
@@ -290,13 +290,13 @@ class HeaderContainer extends WebComponent {
                             <button class="basket-button"></button>
                         </div>
                         <div class="search-container">
-                        <form class="search-container-form">
+                        <div class="search-container-form">
                             <input type="text" class="search-bar" placeholder="Поиск...">
                             <div class="search-icon">
                             <button class="search-button">
                             </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
                 </div>
@@ -321,6 +321,7 @@ class HeaderContainer extends WebComponent {
         const basketCounter = this.shadowRoot.querySelector('.basket-counter')
         const categoriesContainer = this.shadowRoot.querySelector('.categories-container')
         const basketButton = this.shadowRoot.querySelector('.basket-button')
+        const search = this.shadowRoot.querySelector('.search-bar')
 
         window.addEventListener('basket-changed', () => {
             basketCounter.innerText = window.shop.basket.length
@@ -330,10 +331,30 @@ class HeaderContainer extends WebComponent {
                 basketCounter.style.display = 'flex'
             }
         })
-        this.updateCount(basketCounter)
+
+        this.updateCount()
 
         categoryButton.addEventListener('click', () => {
             this.categoriesOpen(topLine, bottomLine, categories, mover, headerContent)
+        })
+
+        //search function
+        search.addEventListener('input', (e) => {
+            let arr = []
+            if (window.shop.selectedCategory === 'cat-all'){
+                arr = window.shop.products
+            } else if (window.shop.selectedCategory === 'cat-sale') {
+                arr = window.shop.products.filter(card => card.discount)
+            } else {
+                arr = window.shop.products.filter(card => card.category === +window.shop.selectedCategory[4])
+            }
+
+            if (e.target.value !== '') {
+                window.shop.shownCards = arr.filter(card => card.title === e.target.value)
+            } else {
+                window.shop.shownCards = arr
+            }
+            this.emit('render-cards')
         })
 
         window.addEventListener('create-categories', () => {
@@ -343,6 +364,7 @@ class HeaderContainer extends WebComponent {
         basketButton.addEventListener('click', () => {
             window.shop.class === 'basket-closed' ? window.shop.class = 'basket-active' : window.shop.class = 'basket-closed'
             this.emit('basket-status')
+            this.emit('change-total-price')
         })
     }
 
@@ -354,6 +376,7 @@ class HeaderContainer extends WebComponent {
             bottom.classList.remove('button-bottom-line-open')
             bottom.classList.add('button-bottom-line-closed')
             hide.style.transform = 'translateY(-250px)'
+            hide.style.height = '0'
             move.style.height = `${header.clientHeight + 10}px`
         } else {
             top.classList.remove('button-top-line-closed')
@@ -361,13 +384,16 @@ class HeaderContainer extends WebComponent {
             bottom.classList.remove('button-bottom-line-closed')
             bottom.classList.add('button-bottom-line-open')
             hide.style.transform = 'translateY(0)'
+            hide.style.height = 'auto'
             move.style.height = `${header.clientHeight + hide.clientHeight}px`
         }
     }
 
-    updateCount(basketCounter) {
-        document.addEventListener('update-counter', ({detail}) => {
-            basketCounter.innerText = detail
+    updateCount() {
+        document.addEventListener('update-counter', () => {
+            const reducer = (accumulator, currentValue) => accumulator + currentValue.count
+            this.shadowRoot.querySelector('.basket-counter').innerText = window.shop.basket.reduce(reducer, 0)
+            console.log(window.shop.basket)
         })
     }
 
@@ -400,7 +426,6 @@ class HeaderContainer extends WebComponent {
 
     //category filter function
     categoryFilter(e){
-        console.log(e.target.id)
         if (e.target.id === 'cat-all'){
             window.shop.shownCards = window.shop.products
         } else if (e.target.id === 'cat-sale') {
@@ -408,6 +433,7 @@ class HeaderContainer extends WebComponent {
         } else {
             window.shop.shownCards = window.shop.products.filter(card => card.category === +e.target.id[4])
         }
+        window.shop.selectedCategory = e.target.id
         this.emit('render-cards')
     }
 }

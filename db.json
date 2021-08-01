@@ -254,5 +254,19 @@
       "name": "Декоративный элемент",
       "severalNames": "Декоративные элементы"
     }
+  ],
+  "promo": [
+    {
+      "name": "LETO",
+      "discount": 25
+    },
+    {
+      "name": "HOME",
+      "discount": 10
+    },
+    {
+      "name": "Lelele",
+      "discount": 90
+    }
   ]
 }

@@ -281,6 +281,16 @@ class ProductCard extends WebComponent {
 
         button.addEventListener('click', () => {
             this.emit('add_product_to_cart', {id: this.id, title: this.title, price: this.price, img: this.img, discount: this.discount})
+            this.emit('change-add-button')
+        })
+        card.addEventListener('mouseenter', () => {
+            this.aiming(sale, saleText, img)
+        })
+        card.addEventListener('mouseleave', () => {
+            this.aiming(sale, saleText, img)
+        })
+
+        window.addEventListener('change-add-button', () => {
             const index = window.shop.basket.findIndex(product => product.id === this.id)
             this.emit('basket-create-product')
             if (index !== -1) {
@@ -288,12 +298,6 @@ class ProductCard extends WebComponent {
             } else {
                 button.innerText = 'В корзину'
             }
-        })
-        card.addEventListener('mouseenter', () => {
-            this.aiming(sale, saleText, img)
-        })
-        card.addEventListener('mouseleave', () => {
-            this.aiming(sale, saleText, img)
         })
     }
 
