@@ -285,10 +285,6 @@ class HeaderContainer extends WebComponent {
                     </div>
                     <h1 class="logo">cose rubate</h1>
                     <div class="basket-search-container">
-                        <div class="basket-container">
-                            <div class="basket-counter">0</div>
-                            <button class="basket-button"></button>
-                        </div>
                         <div class="search-container">
                         <div class="search-container-form">
                             <input type="text" class="search-bar" placeholder="Поиск...">
@@ -298,6 +294,10 @@ class HeaderContainer extends WebComponent {
                             </div>
                         </div>
                     </div>
+                        <div class="basket-container">
+                            <div class="basket-counter">0</div>
+                            <button class="basket-button"></button>
+                        </div>
                 </div>
                 </div>
                 <div class="header-categories">
@@ -324,15 +324,13 @@ class HeaderContainer extends WebComponent {
         const search = this.shadowRoot.querySelector('.search-bar')
 
         window.addEventListener('basket-changed', () => {
-            basketCounter.innerText = window.shop.basket.length
+            this.updateCount()
             if (window.shop.basket.length === 0){
                 basketCounter.style.display = 'none'
             } else {
                 basketCounter.style.display = 'flex'
             }
         })
-
-        this.updateCount()
 
         categoryButton.addEventListener('click', () => {
             this.categoriesOpen(topLine, bottomLine, categories, mover, headerContent)
@@ -390,11 +388,8 @@ class HeaderContainer extends WebComponent {
     }
 
     updateCount() {
-        document.addEventListener('update-counter', () => {
-            const reducer = (accumulator, currentValue) => accumulator + currentValue.count
-            this.shadowRoot.querySelector('.basket-counter').innerText = window.shop.basket.reduce(reducer, 0)
-            console.log(window.shop.basket)
-        })
+        const reducer = (accumulator, currentValue) => accumulator + currentValue.count
+        this.shadowRoot.querySelector('.basket-counter').innerText = window.shop.basket.reduce(reducer, 0)
     }
 
     //create category buttons

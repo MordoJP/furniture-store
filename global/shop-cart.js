@@ -12,13 +12,13 @@ class ShopCart extends WebComponent {
             .basket {
                 position: fixed;
                 overflow: hidden;
-                overflow-y: auto;
                 display: flex;
+                box-sizing: border-box;
                 flex-flow: column nowrap;
-                justify-content: flex-start;
+                justify-content: space-between;
                 align-items: center;
                 z-index: 10;
-                
+                transition: All 0.3s ease-out;
             }
             
             .overlay {
@@ -41,6 +41,7 @@ class ShopCart extends WebComponent {
             /*styles for basket appearance*/
             .basket-closed {
                 visibility: hidden;
+                opacity: 0;
             }
             
             .basket-active {
@@ -48,7 +49,6 @@ class ShopCart extends WebComponent {
             }
             
             .basket-active, .basket-container {
-                /*transform: scale(1);*/
                 opacity: 1;
             }
             
@@ -62,6 +62,7 @@ class ShopCart extends WebComponent {
             /*top part of the basket*/
             .basket-top {
                 display: flex;
+                height: 10%;
                 justify-content: space-between;
                 align-items: center;
                 padding: 20px;
@@ -117,17 +118,22 @@ class ShopCart extends WebComponent {
             
             /*bottom part of the basket*/
             .basket-bottom {
-                height: 100%;
+                height: 80%;
                 display: flex;
                 justify-content: space-between;
-                margin: 10px;
+                margin: 20px;
+                box-sizing: border-box;
             }
             
             .basket-products-block {
                 width: 70%;
+                height: 100%;
                 margin: 10px;
                 display: none;
                 flex-direction: column;
+                overflow-y: auto;
+                flex-grow: 1;
+                box-sizing: border-box;
             }
             
             
@@ -135,6 +141,7 @@ class ShopCart extends WebComponent {
             .basket-info {
                 margin: 10px;
                 width: 30%;
+                height: 100%;
                 display: none;
                 flex-direction: column;
                 justify-content: space-between;
@@ -189,6 +196,7 @@ class ShopCart extends WebComponent {
                 font: 20px "Circe Bold";
                 color: azure;
                 margin: 10px;
+                text-align: center;
             }
             
             .promo-place:focus {
@@ -229,9 +237,11 @@ class ShopCart extends WebComponent {
             
             .product-amount-controls {
                 align-items: center;
+                width: 100px;
+                justify-content: space-between;
             }
             
-            .product-title, .product-unit-price, .product-amount, .product-old-price, .product-amount-minus, .product-amount-plus, .product-price-all, .product-delete {
+            .product-title, .product-unit-price, .product-amount, .product-old-price, .product-price-all, .product-delete, .product-amount {
                 color: azure;
             }
             
@@ -257,7 +267,6 @@ class ShopCart extends WebComponent {
             .product-amount-minus, .product-amount-plus, .product-delete {
                 cursor: pointer;
                 background-color: black;
-                border: 1px solid azure;
                 opacity: .7;
                 transition: all 0.3s ease-out;
             }
@@ -266,24 +275,260 @@ class ShopCart extends WebComponent {
                 opacity: 1;
             }
             
+            .product-amount {
+                font: 20px Circe;
+            }
+            
             .product-amount-minus, .product-amount-plus {
-                font: 20px "Circe Bold";
                 height: 25px;
                 width: 25px;
-                border-radius: 50%;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
+                border: 0;
                 margin: 0 10px;
                 padding: 0;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: cover;
+            }
+            
+            .product-amount-minus{
+                background-image: url("img/icons/minus.svg");
+            }
+            
+            .product-amount-plus{
+                background-image: url("img/icons/plus.svg");
             }
             
             .product-delete {
                 font: 16px Circe;
                 height: 40px;
                 width: 100px;
-                border-radius: 20px 20px 20px 20px;
+                border-radius: 20px;
+                border: 1px solid azure;
+            }
+            
+            @media screen and (max-width: 1135px) {
+            .basket-bottom {
+                margin: 12px;
+            }
+            
+            .product-container {
+                height: 120px;
+                margin: 12px 6px;
+                padding-right: 25px;
+            }
+            
+            .basket-products-block, .basket-info{
+                margin: 0;
+            }
+            
+            .basket-title {
+                font: 24px "Circe Bold";
+                margin-left: 15px;
+            }
+            
+            .price-title, .amount-title, .promo-text {
+                font: 16px Circe;
+            }
+            
+            .close-top, .close-bottom {
+                width: 30px;
+            }
+            
+            .product-title {
+                font: 20px "Circe ExtraBold";
+            }
+            
+            .price-total, .amount-total {
+                font: 14px "Circe Light";
+            }
+            
+            .product-old-price {
+                font: 8px "Circe ExtraLight";
+            }
+            
+            .product-unit-price {
+                font: 12px Circe;
+            }
+            
+            .product-price-all {
+                font: 16px "Circe Light";
+                margin: 20px 0;
+            }
+            
+            .product-amount-minus, .product-amount-plus {
+                height: 18px;
+                width: 18px;
+                margin: 0 7px;
+            }
+            
+            .product-image {
+                width: 120px;
+                height: 120px;
+                margin: 0 20px;
+            }
+            
+            .product-amount {
+                font: 15px Circe;
+            }
+            
+            .product-delete {
+                font: 12px Circe;
+                height: 30px;
+                width: 85px;
+                border-radius: 30px;
+            }
+            
+            .promo-place {
+                height: 35px;
+                border-radius: 35px;
+                width: 150px;
+                padding: 8px 18px;
+                font: 15px "Circe Bold";
+                margin: 8px;
+            }
+            
+            .clear-basket, .buy {
+                border-radius: 35px;
+                width: 150px;
+                height: 35px;
+                margin: 8px;
+                font: 14px Circe;
+            }
+            
+            .basket-empty {
+                font: 17px "Circe Light";
+            }
+            
+            .basket-close {
+                width: 30px;
+                height: 30px;
+            }
+            
+            }
+            
+            @media screen and (max-width: 767px) {
+            .basket-bottom {
+                margin: 6px;
+                flex-direction: column;
+                align-items: center;
+                overflow-y: auto;
+                box-sizing: border-box;
+            }
+            
+            .basket-promo, .basket-buttons, .price-container-total, .amount-container {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .basket-info, .basket-products-block {
+                width: 95%;
+                height: auto;
+                padding: 0 2.5%;
+            }
+            
+            .basket-info {
+                padding: 0 10px;
+            }
+            
+            .product-container {
+                height: 70px;
+                width: 97%;
+                margin: 8px 4px;
+                padding-right: 5px;
+            }
+            
+            .basket-title {
+                font: 18px "Circe Bold";
+                margin-left: 15px;
+            }
+            
+            .price-title, .amount-title, .promo-text {
+                font: 10px Circe;
+            }
+            
+            .close-top, .close-bottom {
+                width: 20px;
+            }
+            
+            .product-title {
+                font: 14px "Circe ExtraBold";
+                margin: 0;
+            }
+            
+            .product-amount-controls {
+                width: 60px;
+            }
+            
+            .price-total, .amount-total {
+                font: 10px "Circe Light";
+                margin: 0;
+            }
+            
+            .product-old-price {
+                font: 6px "Circe ExtraLight";
+            }
+            
+            .product-unit-price {
+                font: 9px Circe;
+            }
+            
+            .product-price-all {
+                font: 12px "Circe Light";
+                margin: 20px 0;
+            }
+            
+            .product-amount-minus, .product-amount-plus {
+                height: 15px;
+                width: 15px;
+                margin: 0 5px;
+            }
+            
+            .product-image {
+                width: 50px;
+                height: 50px;
+                margin: 0 10px;
+            }
+            
+            .price-container {
+                flex-direction: column;
+            }
+            
+            .product-amount {
+                font: 10px Circe;
+            }
+            
+            .product-delete {
+                font: 8px Circe;
+                height: 20px;
+                width: 70px;
+                border-radius: 20px;
+            }
+            
+            .promo-place {
+                height: 25px;
+                border-radius: 25px;
+                width: 130px;
+                padding: 5px 12px;
+                font: 12px "Circe Bold";
+            }
+            
+            .clear-basket, .buy {
+                border-radius: 25px;
+                width: 130px;
+                height: 25px;
+                margin: 5px;
+                font: 10px Circe;
+            }
+            
+            .basket-empty {
+                font: 12px "Circe Light";
+            }
+            
+            .basket-close {
+                width: 20px;
+                height: 20px;
+            }
             }
 		</style>
 	`}
@@ -303,7 +548,7 @@ class ShopCart extends WebComponent {
                     <div class="basket-products-block"></div>
                     <div class="basket-info">
                         <div class="info-container">
-                            <div class="price-container">
+                            <div class="price-container-total">
                                 <div class="price-title">Сумма заказа</div>
                                 <div class="price-total"></div>
                             </div>
@@ -315,7 +560,7 @@ class ShopCart extends WebComponent {
                         <div class="basket-info-controls">
                             <div class="basket-promo">
                                 <span class="promo-text">Введите промокод</span>
-                                <input type="text" class="promo-place">
+                                <input type="text" class="promo-place" placeholder="LETO HOME">
                             </div>
                             <div class="basket-buttons">
                                 <button class="clear-basket">Очистить корзину</button>
@@ -413,9 +658,9 @@ class ShopCart extends WebComponent {
                 <span ${this.discountChecker(prod.discount, prod.price)} / штука</span>
                 </div>
                 <div class="product-amount-controls">
-                    <button class="product-amount-minus" id="min-${prod.id}">-</button>
+                    <button class="product-amount-minus" id="min-${prod.id}"></button>
                     <span class="product-amount">${prod.count}</span>
-                    <button class="product-amount-plus" id="pls-${prod.id}">+</button>
+                    <button class="product-amount-plus" id="pls-${prod.id}"></button>
                 </div>
                 </div>
                 </div>
@@ -429,11 +674,7 @@ class ShopCart extends WebComponent {
                 deleteProduct.addEventListener('click', (e) => {
                     const index = window.shop.basket.findIndex(product => product.id === e.target.id.split('-')[1])
                     window.shop.basket.splice(index, 1)
-                    this.emit('basket-create-product')
-                    this.emit('change-add-button')
-                    this.emit('update-counter')
-                    this.emit('basket-changed')
-                    this.emit('change-total-price')
+                    this.caller()
                     this.emit('header-count')
                 })
                 prodMinus.addEventListener('click', (e) => {
@@ -444,27 +685,15 @@ class ShopCart extends WebComponent {
                     }
                     bask.count--
                     bask.totalPrice = bask.discount ? bask.price * (100 - bask.discount) / 100 * bask.count : bask.price * bask.count
-                    this.emit('basket-create-product')
-                    this.emit('change-add-button')
-                    this.emit('update-counter')
-                    this.emit('basket-changed')
-                    this.emit('change-total-price')
-                    console.log(window.shop.basket)
+                    this.caller()
                 })
                 prodPlus.addEventListener('click', (e) => {
                     const index = window.shop.basket.findIndex(product => product.id === e.target.id.split('-')[1])
                     const bask = window.shop.basket[index]
                     bask.count++
                     bask.totalPrice = bask.discount ? bask.price * (100 - bask.discount) / 100 * bask.count : bask.price * bask.count
-                    this.emit('basket-create-product')
-                    this.emit('change-add-button')
-                    this.emit('update-counter')
-                    this.emit('basket-changed')
-                    this.emit('change-total-price')
-                    console.log(window.shop.basket)
+                    this.caller()
                 })
-
-
 
                 cont.append(product)
             })
@@ -493,20 +722,22 @@ class ShopCart extends WebComponent {
         }
     }
 
+    caller() {
+        this.emit('basket-create-product')
+        this.emit('change-add-button')
+        this.emit('basket-changed')
+        this.emit('change-total-price')
+    }
+
     cleaner() {
         window.shop.basket = []
-        this.emit('basket-create-product')
-        this.emit('basket-changed')
-        this.emit('change-add-button')
-        this.emit('update-counter')
+        this.caller()
     }
 
     reduceValue(val) {
         const reducer = (accumulator, currentValue) => accumulator + currentValue[val]
         return window.shop.basket.reduce(reducer, 0)
     }
-
-
 }
 
 customElements.define('shop-cart', ShopCart)
