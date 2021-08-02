@@ -226,6 +226,10 @@ class ShopCart extends WebComponent {
                 justify-content: space-between;
             }
             
+            .product-right-part {
+                align-items: flex-end;
+            }
+            
             .product-image {
                 width: 150px;
                 height: 150px;
@@ -237,7 +241,7 @@ class ShopCart extends WebComponent {
             
             .product-amount-controls {
                 align-items: center;
-                width: 100px;
+                width: 130px;
                 justify-content: space-between;
             }
             
