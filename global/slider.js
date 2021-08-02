@@ -6,7 +6,7 @@ class SliderContainer extends WebComponent {
 		        flex-direction: column;
 		        align-items: center;
 		        width: 95%;
-		        max-width: 1423px;
+		        max-width: 1000px;
 		        margin: 0 auto;
 		    }
             .slider {
